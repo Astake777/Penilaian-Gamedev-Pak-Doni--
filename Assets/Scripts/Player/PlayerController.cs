@@ -6,12 +6,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerData playerData;
 
     private float currentHP;
+
     private PlayerInput playerInput;
     private Vector2 moveInput;
 
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+        currentHP = playerData.maxHP;
     }
     
     

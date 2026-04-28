@@ -21,20 +21,42 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            PauseGame();
+            if (currentState == GameState.Playing)
+            {
+                PauseGame();
+            }
+            else if (currentState == GameState.Paused)
+            {
+                ResumeGame();
+            }
         }
     }
 
     public void PauseGame()
     {
-        Time.timeScale = 0f;
+        Debug.Log("Game Paused");
         currentState = GameState.Paused;
+        Time.timeScale = 0f;
+    }
+
+    public void ResumeGame()
+    {
+     currentState = GameState.Playing;
+     Time.timeScale = 1f;
+     Debug.Log("Game Resumed");
     }
 
     public void GameOver()
     {
         Debug.Log("Game Over");
-    
         currentState = GameState.GameOver;
+        Time.timeScale = 0f;
+        
+    }
+
+    public void GoToMenu()
+    {
+        Time.timeScale = 1f;
+        currentState = GameState.MainMenu;
     }
 }
