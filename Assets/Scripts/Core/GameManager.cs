@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         currentState = GameState.Playing;
+
     }
 
     void Update()
@@ -33,6 +34,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("Game Over");
+    
         currentState = GameState.GameOver;
     }
 }

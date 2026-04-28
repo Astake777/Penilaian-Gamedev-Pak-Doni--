@@ -66,5 +66,5 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "BelajarGit.sln"
+    "dotnet.defaultSolution": "PTS GAMEDEVV.sln"
 }
