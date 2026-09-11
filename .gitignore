@@ -97,3 +97,32 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Claude / AI tooling (jangan ikut ke repo)
+.claude/
+.claude-flow/
+.claude-flow.meta
+.claude.meta
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json
+.swarm/
+.hive-mind/
+.ruflo/
+claude-flow*
+memory/
+
+
+# Claude / AI tooling (jangan ikut ke repo)
+.claude/
+.claude-flow/
+.claude-flow.meta
+.claude.meta
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json
+.swarm/
+.hive-mind/
+.ruflo/
+claude-flow*
+memory/

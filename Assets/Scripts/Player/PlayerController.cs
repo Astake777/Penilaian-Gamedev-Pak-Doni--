@@ -1,13 +1,18 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     [SerializeField] private PlayerData playerData;
 
     private float currentHP;
     private PlayerInput playerInput;
     private Vector2 moveInput;
+
+    public GameManager gameManager;
+    public int skor = 0;
+    // ... kode gerak dari Tugas 1 ...
 
     // Variabel untuk menyimpan input serangan sebelumnya
     public GameObject bulletPrefab;
@@ -16,11 +21,14 @@ public class PlayerController : MonoBehaviour
     private float attackInput;
     // variabe untuk menyimpan input serangan sebelumnya agar bisa mendeteksi perubahan dari tidak menekan ke menekan
     private float previousAttackInput;
+    public TextMeshProUGUI teksSkor;
 
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
         currentHP = playerData.maxHP;
+        gameManager = FindFirstObjectByType<GameManager>();
+        
     }
 
     void Shoot()
@@ -63,10 +71,10 @@ public class PlayerController : MonoBehaviour
 
 
 
-        // Set bullet direction
-        Bullet bullet = bulletObj.GetComponent<Bullet>();
+            // Set bullet direction
+            Bullet bullet = bulletObj.GetComponent<Bullet>();
 
-        if (bullet != null)
+            if (bullet != null)
             {
                 bullet.SetDirection(shootDirection);
                 Debug.Log($"Bullet direction set to: {shootDirection}");
@@ -80,45 +88,66 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-        void Update()
+    void Update()
+    {
+        if (playerInput == null) return;
+
+        moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
+        // Baca input serangan
+        attackInput = playerInput.actions["Attack"].ReadValue<float>();
+
+
+        float h = moveInput.x;
+        float v = moveInput.y;
+
+        transform.Translate(new Vector3(h, v, 0) * playerData.moveSpeed * Time.deltaTime);
+
+        // Ini untuk ngecek apakah tombol serang baru saja ditekan
+        if (previousAttackInput == 0 && attackInput > 0)
         {
-            if (playerInput == null) return;
-
-            moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
-            // Baca input serangan
-            attackInput = playerInput.actions["Attack"].ReadValue<float>();
-
-
-            float h = moveInput.x;
-            float v = moveInput.y;
-
-            transform.Translate(new Vector3(h, v, 0) * playerData.moveSpeed * Time.deltaTime);
-
-            // Ini untuk ngecek apakah tombol serang baru saja ditekan
-            if (previousAttackInput == 0 && attackInput > 0)
-            {
-                Shoot();
-            }
-
-            previousAttackInput = attackInput;
+            Shoot();
         }
 
-        void OnCollisionStay2D(Collision2D collision)
+        previousAttackInput = attackInput;
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
         {
-            if (collision.gameObject.CompareTag("Wall"))
-            {
-                TakeDamage(0.1f);
-            }
+            TakeDamage(1);
         }
+    }
 
-        void TakeDamage(float dmg)
+    public void TakeDamage(int damage)
+    {
+        currentHP -= damage;
+        Debug.Log("Player HP: " + currentHP);
+
+        if (currentHP <= 0)
         {
-            currentHP -= dmg;
-            Debug.Log("Player HP: " + currentHP);
+            GameManager.Instance.GameOver();
+        }
+    }
 
-            if (currentHP <= 0)
+void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Coin"))
+        {
+            Destroy(other.gameObject);
+            
+            // TODO: tambah skor sebanyak 1 (Kode Aslimu)
+            skor += 1;
+            
+            // TODO: tampilkan skor ke Console (Kode Aslimu)
+            teksSkor.text = "Total Coin : " + skor.ToString();
+            Debug.Log("Skor: " + skor);
+
+            // PENTING: Lapor ke GameManager agar dicek apakah sudah menang
+            if (gameManager != null)
             {
-                GameManager.Instance.GameOver();
+                gameManager.AmbilKoin();
             }
         }
     }
+}

@@ -4,6 +4,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed = 10f;
+    [SerializeField] private int damage = 25;
     private Rigidbody2D rb;
     private Vector3 direction;
 
@@ -23,7 +24,6 @@ public class Bullet : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         Debug.Log($"Bullet spawned with speed: {speed}, direction: {direction}");
-        gameObject.SetActive(false); // NONAKTIFKAN OBJEK
         // Destroy bullet after 5 seconds if it hasn't been destroyed already
         // Destroy(gameObject, 5f);
     }
@@ -52,6 +52,15 @@ public class Bullet : MonoBehaviour
     {
         // Destroy bullet on collision
         Debug.Log("Bullet hit: " + collision.gameObject.name);
-        Destroy(gameObject);
+
+        Enemy enemy = collision.GetComponent<Enemy>();
+        if (enemy != null)
+        {
+            enemy.KenaDamage(damage);
+            
+        }
+
+        // Kembalikan ke pool, bukan Destroy
+        gameObject.SetActive(false);
     }
 }
